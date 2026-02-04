@@ -19,11 +19,15 @@ variable "job_role_arn" {
   type        = string
 }
 
+variable "pipeline_name" {
+  description = "Name of the pipeline, matching the repo's ECR repository: 'veb-data-pipelines-{pipeline_name}'"
+  type        = string
+}
+
 variable "fargate_jobs" {
   description = "A list containing images for which we want to create job definition."
   type = list(object({
     index           = number
-    job_name        = string
     environment     = string
     memory          = string
     vcpu            = string
