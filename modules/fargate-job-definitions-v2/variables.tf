@@ -30,15 +30,3 @@ variable "fargate_jobs" {
     pipeline_script = string # bv "extract", "transform", "load", ...
   }))
 }
-
-variable "fargte_jobs" {
-  description = "A list containing images for which we want to create job definition."
-  type        = list(object({
-        index = number
-        job_name = string
-        environment = string
-        memory = string
-        vcpu    = string
-        pipeline_script = string
-      }))
-}
