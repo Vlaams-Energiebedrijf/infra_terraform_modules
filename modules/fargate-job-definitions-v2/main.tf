@@ -1,20 +1,20 @@
 locals {
   image_tag_by_env = {
-    dev = "dev-latest"
-    prd = "prd-latest"
+    dev = "latest-dev"
+    prd = "latest-prd"
   }
 }
 
 resource "aws_batch_job_definition" "fargate_batch_job_definition" {
 
     for_each = {for fargate_batch_job_definition in var.fargate_jobs:  fargate_batch_job_definition.index => fargate_batch_job_definition}
-    name = "${each.value.environment}-${each.value.job_name}-${replace(each.value.vcpu, ".", "")}-${each.value.memory}"
+    name = "${each.value.environment}-${var.pipeline_name}-${each.value.pipeline_script}-${replace(each.value.vcpu, ".", "")}-${each.value.memory}"
 
     tags = {
         Terraform   = true
         Owner       = var.owner
         Environment = each.value.environment
-        Name        = each.value.job_name
+        Name        = "${var.pipeline_name}-${each.value.pipeline_script}"
     } 
 
     type = "container"
@@ -33,7 +33,7 @@ resource "aws_batch_job_definition" "fargate_batch_job_definition" {
           }
         ]
 
-        image   = "${var.account_id}.dkr.ecr.eu-west-1.amazonaws.com/veb-data-pipelines-${each.value.job_name}:${local.image_tag_by_env[each.value.environment]}" // we add veb-data-pipelines for legacy compatibility
+        image   = "${var.account_id}.dkr.ecr.eu-west-1.amazonaws.com/veb-data-pipelines-${var.pipeline_name}:${local.image_tag_by_env[each.value.environment]}" // we add veb-data-pipelines for legacy compatibility
 
         fargatePlatformConfiguration = {
             platformVersion = "LATEST"
