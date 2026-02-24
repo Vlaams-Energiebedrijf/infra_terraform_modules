@@ -1,6 +1,7 @@
 locals {
   image_tag_by_env = {
     dev = "latest-dev"
+    stg = "latest-stg"
     prd = "latest-prd"
   }
 }
